@@ -67,5 +67,11 @@ if [[ "${#MAN_ARGS[@]}" -eq 0 ]] && [[ -z "$BATMAN_LEVEL" ]] && command -v "$EXE
 fi
 
 # Run man.
-command man "${MAN_ARGS[@]}"
+if [[ -v TERMUX_VERSION ]]; then
+    # termux `man` can't handle complex MANPAGER code
+    # https://github.com/sharkdp/bat/issues/1517#issuecomment-1044963872
+    command man "${MAN_ARGS[@]}" | eval ${MANPAGER}
+else
+    command man "${MAN_ARGS[@]}"
+fi
 exit $?
